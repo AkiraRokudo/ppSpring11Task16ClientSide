@@ -12,16 +12,16 @@
 
 <div th:fragment="topnavbar">
     <div class="row navbar-dark bg-dark">
-    <div class="col-10 ">
-        <span class="navbar-text text-white font-weight-bold" id="titleUserName">  </span>
-        <span class="navbar-text text-white"> with roles: </span>
-        <span class="navbar-text text-white" id="titleUserRoles">  </span>\
-    </div>
-    <div class="col-2 pr-0">
-        <div th:insert="/part/logout ::logout">
-            <!--Смотри соответствующий файл-->
+        <div class="col-10 ">
+            <span class="navbar-text text-white font-weight-bold" id="titleUserName">  </span>
+            <span class="navbar-text text-white"> with roles: </span>
+            <span class="navbar-text text-white" id="titleUserRoles">  </span>\
         </div>
-    </div>
+        <div class="col-2 pr-0">
+            <div th:insert="/part/logout ::logout">
+                <!--Смотри соответствующий файл-->
+            </div>
+        </div>
     </div>
 </div>
 

@@ -22,6 +22,8 @@ $('#userModal').on('show.bs.modal', function (event) {
     //подправим кнопку
     var submitButton = modal.find('#changeButton')
     submitButton.text(isDeleteMode ? 'Delete' : 'Edit')
+    submitButton.removeClass('btn-danger')
+    submitButton.removeClass('btn-primary')//перестрахуемся и удалим оба. в случае масштабирования - заменить на удаление всех и вешанье класса btn
     submitButton.addClass(isDeleteMode ? 'btn-danger' : 'btn-primary')
 
 
@@ -69,19 +71,6 @@ $('#userModal').on('show.bs.modal', function (event) {
 
         }
     })
-
-
-    /*
-    TODO: на модернизацию которой никогда не будет - сделать получение данных масштабируемым.
-      Получать все td и бить их значения. обрамлять в спаны то, что должно селектится
-     */
-
-    /*
-    TODO: на сейчас. получить данные из строки таблицы, опираясь на айдишник. Тупо ищем по требуемой ячейке
-    тем самым получая готовый набор. его же и кладем в качестве значений.
-    Как мы определим в какой именно элемент класть? дак мы же в нем и работаем.
-    На сегодня я влеплю только 1 параметр. Остальное позже
-     */
 
 })
 

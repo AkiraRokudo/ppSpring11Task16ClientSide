@@ -2,6 +2,8 @@ package ppSpring11Task16.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.*;
 import org.springframework.http.client.support.BasicAuthorizationInterceptor;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import ppSpring11Task16.components.ServerUrl;
 import ppSpring11Task16.dto.UserDto;
 import ppSpring11Task16.model.RoleData;
 import ppSpring11Task16.model.UserData;
@@ -29,44 +32,25 @@ import java.util.Set;
 @Primary
 public class UserLoginService implements UserDetailsService {
 
-    //тут рестшаблоны для доступа
-    //у клиента нет своих данных. но ему их нужно откуда-то брать
-    //он может получить только данные в виде дто.
+    private ServerUrl serverUrl;
+    private HttpHeaders basicAuthHeaders;
+
+    @Autowired
+    public UserLoginService(HttpHeaders basicAuthHeaders, ServerUrl serverUrl) {
+        this.basicAuthHeaders = basicAuthHeaders;
+        this.serverUrl = serverUrl;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserDto userDto = null;
         try {
-            // create headers
-            HttpHeaders headers = new HttpHeaders();
-            // create auth credentials
-            String authStr = "ADMIN:ADMIN";
-            String base64Creds = Base64.getEncoder().encodeToString(authStr.getBytes());
-            headers.add("Authorization", "Basic " + base64Creds);
-            //если отдаем объект - говорим об этом в хеддере
-
-//            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-//            headers.setContentType(MediaType.TEXT_PLAIN);
-            // create request
-            HttpEntity<String> request = new HttpEntity(username,headers);
-
-            //определили куда шлем
-            // request url
-            String domain = "http://localhost";
-            String port = ":8081";
-            String loginPart = "/user/principalInfo";
-            StringBuilder sb = new StringBuilder();
-            String url = sb.append(domain).append(port).append(loginPart).toString();
-
-            //создали шаблон
+            HttpEntity<String> request = new HttpEntity(username,basicAuthHeaders);
+            String url = serverUrl.getServerUrl() + "/user/principalInfo";
             RestTemplate loginTemplate = new RestTemplate();
-
             //послали и получили ответ
             ResponseEntity<UserDto> response = loginTemplate.exchange(url, HttpMethod.POST, request,UserDto.class);
 
-            //Преобразовали ответ в нужный нам формат
-            // get JSON response. Это на случай если конвертер сам не справится
-            //String json = response.getBody();
             userDto = response.getBody();
         } catch (RestClientException e) {
             e.printStackTrace();

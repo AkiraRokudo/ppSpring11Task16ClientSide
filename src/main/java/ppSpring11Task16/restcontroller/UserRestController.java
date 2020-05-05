@@ -64,13 +64,13 @@ public class UserRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/admin/edit")
+    @PutMapping("/admin/edit")
     public ResponseEntity<?> editUser(@RequestBody UserDto userDto) {
         userService.editObject(userDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/admin/delete")
+    @DeleteMapping("/admin/delete")
     public ResponseEntity<?> deleteUser(@RequestBody UserDto userDto) {
         userService.removeObject(userDto.getId()); // ибо косяк может быть с селектнутыми ролями
         return new ResponseEntity<>(HttpStatus.OK);

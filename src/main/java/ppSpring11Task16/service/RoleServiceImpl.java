@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import ppSpring11Task16.components.ServerUrl;
 import ppSpring11Task16.dto.RoleDto;
 import ppSpring11Task16.dto.UserDto;
 
@@ -21,6 +22,14 @@ import java.util.*;
 public class RoleServiceImpl implements RoleService {
 
     //Шаблон для получения определенной роли по имени
+    private ServerUrl serverUrl;
+    private HttpHeaders basicAuthHeaders;
+
+    @Autowired
+    public RoleServiceImpl(HttpHeaders basicAuthHeaders, ServerUrl serverUrl) {
+        this.basicAuthHeaders = basicAuthHeaders;
+        this.serverUrl = serverUrl;
+    }
 
     @Override
     public RoleDto addObject(RoleDto role) {
@@ -61,37 +70,11 @@ public class RoleServiceImpl implements RoleService {
     public List<RoleDto> getAll() {
         List<RoleDto> roles = new ArrayList<>();
         try {
-
-            // create headers
-            HttpHeaders headers = new HttpHeaders();
-            // create auth credentials
-            String authStr = "ADMIN:ADMIN";
-            String base64Creds = Base64.getEncoder().encodeToString(authStr.getBytes());
-            headers.add("Authorization", "Basic " + base64Creds);
-            //если отдаем объект - говорим об этом в хеддере
-
-//            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-//            headers.setContentType(MediaType.TEXT_PLAIN);
-            // create request
-            HttpEntity<String> request = new HttpEntity(null,headers);
-
-            //определили куда шлем
-            // request url
-            String domain = "http://localhost";
-            String port = ":8081";
-            String loginPart = "/admin/roles";
-            StringBuilder sb = new StringBuilder();
-            String url = sb.append(domain).append(port).append(loginPart).toString();
-
-            //создали шаблон
+            HttpEntity<String> request = new HttpEntity(basicAuthHeaders);
+            String url = serverUrl.getServerUrl() + "/admin/roles";
             RestTemplate userTemplate = new RestTemplate();
-
             //послали и получили ответ
             ResponseEntity<RoleDto[]> response = userTemplate.exchange(url, HttpMethod.GET, request,RoleDto[].class);
-
-            //Преобразовали ответ в нужный нам формат
-            // get JSON response. Это на случай если конвертер сам не справится
-            //String json = response.getBody();
             roles = Arrays.asList(response.getBody());
         } catch (RestClientException e) {
             e.printStackTrace();
