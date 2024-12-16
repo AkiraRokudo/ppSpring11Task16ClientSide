@@ -1,16 +1,13 @@
 package ppSpring11Task16.restcontroller;
 
-import com.sun.deploy.nativesandbox.comm.Response;
-import org.springframework.http.ResponseEntity;
-import ppSpring11Task16.dto.RoleDto;
-import ppSpring11Task16.service.RoleService;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import ppSpring11Task16.service.RoleService;
 
 /**
  * @author AkiraRokudo on 26.04.2020 in one of sun day
